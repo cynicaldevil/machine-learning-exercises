@@ -23,6 +23,8 @@ plt.show()
 
 # ## 2. Gradient Descent
 
+# ### 2.1 Computing the Cost
+
 # In[3]:
 
 m = y.shape
@@ -41,9 +43,42 @@ def compute_cost(X, Y, theta):
     # Handy way to obtain the squares
     J = np.dot((H - Y).T, (H - Y))
     J = J / (2 * m)
-    return float(J)
+    return J[0, 0]
 
 Y = np.array([y]).T
 theta = np.zeros((2, 1))
 print "Cost with theta = [0, 0]:", compute_cost(X, Y, theta)
+
+
+# ### 2.1 Calculating Gradient Descent
+
+# In[4]:
+
+# returns updated values of theta
+def gradient_descent(X, Y, inner_theta, alpha, iterations):
+    # in each iteration:
+    # 1. Calculate cost using compute_cost function and print it.
+    #    Also, check if cost is decreasing or not.
+    # 2. Update values of theta.
+    
+    J_values = np.array([])
+    J_prev = 100000
+    for i in range(1, iterations):
+        J = compute_cost(X, Y, inner_theta)
+        assert (J < J_prev), "Cost should be decreasing!!"
+        H = np.dot(X, inner_theta)
+        temp = np.dot((H - Y).T , X)
+        temp = temp * alpha / m
+        inner_theta = inner_theta - temp.T
+        J_values = np.hstack((J_values, J))
+        J_prev = J
+    plt.figure(figsize=(12,8))
+    plt.plot(range(1, 1499), J_values[1:], 'bo')
+    plt.show()
+    return inner_theta
+
+alpha = 0.01
+iterations = 1500
+theta = gradient_descent(X, Y, theta, alpha, iterations)
+print theta
 
