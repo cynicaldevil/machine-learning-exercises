@@ -83,3 +83,14 @@ iterations = 1500
 theta = gradient_descent(X, Y, theta, alpha, iterations)
 print theta
 
+
+# In[9]:
+
+plt.figure(figsize=(12,8))
+plt.plot(x, y, 'rx', markersize=10, label="Training data")
+plt.plot(X[:,1], np.dot(X, theta), '-', label="Linear Regression")
+plt.xlabel('Population of City in 10,000s')
+plt.ylabel('Profit in $10,000s')
+plt.title('Training data with linear regression fit')
+plt.show()
+
