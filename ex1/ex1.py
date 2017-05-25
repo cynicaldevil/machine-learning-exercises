@@ -30,9 +30,8 @@ plt.show()
 m = y.shape
 # obtain number of training samples
 m = m[0]
-x = np.array([x])
 # use hstack to concatenate to column vector-like arrays, obtain a 2-column matrix
-X = np.hstack((np.ones((m, 1)), x.T))
+X = np.hstack((np.ones((m, 1)), np.array([x]).T))
 
 # Cost computing function
 def compute_cost(X, Y, theta):
@@ -74,6 +73,8 @@ def gradient_descent(X, Y, inner_theta, alpha, iterations):
         J_prev = J
     plt.figure(figsize=(12,8))
     plt.plot(range(1, 1499), J_values[1:], 'bo')
+    plt.xlabel("Number of iterations")
+    plt.ylabel("Value of cost function")
     plt.show()
     return inner_theta
 
