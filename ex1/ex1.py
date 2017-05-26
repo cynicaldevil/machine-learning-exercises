@@ -49,7 +49,7 @@ theta = np.zeros((2, 1))
 print "Cost with theta = [0, 0]:", compute_cost(X, Y, theta)
 
 
-# ### 2.1 Calculating Gradient Descent
+# ### 2.2 Calculating Gradient Descent
 
 # In[4]:
 
@@ -84,7 +84,7 @@ theta = gradient_descent(X, Y, theta, alpha, iterations)
 print theta
 
 
-# In[9]:
+# In[5]:
 
 plt.figure(figsize=(12,8))
 plt.plot(x, y, 'rx', markersize=10, label="Training data")
@@ -92,5 +92,42 @@ plt.plot(X[:,1], np.dot(X, theta), '-', label="Linear Regression")
 plt.xlabel('Population of City in 10,000s')
 plt.ylabel('Profit in $10,000s')
 plt.title('Training data with linear regression fit')
+plt.show()
+
+
+# ## 3. Predicting Values
+
+# In[6]:
+
+# Predict profits for a town of population 35,000 and 70,000
+predict1 = np.dot(np.array([1, 3.5]), theta)
+predict2 = np.dot(np.array([1, 7]), theta)
+print predict1
+print predict2
+
+
+# ## 4. Visualizing J(θ)
+
+# In[28]:
+
+from mpl_toolkits.mplot3d import axes3d
+
+x_points = np.arange(-10, 10, 0.4)
+y_points = np.arange(-1, 4, 0.1)
+J_values = np.empty((0, 50))
+
+for x in x_points:
+    temp = np.array([])
+    for y in y_points:
+        t = np.array([[x], [y]])
+        temp = np.hstack((temp, compute_cost(X, Y, t)))
+    J_values = np.append(J_values, np.array([temp]), axis=0)
+
+fig = plt.figure(figsize=(12,8))
+ax = fig.add_subplot(111, projection='3d')
+x_values, y_values = np.meshgrid(x_points, x_points)
+ax.plot_wireframe(x_values, y_values, J_values, rstride=2, cstride=2)
+ax.view_init(elev=41., azim=130)
+plt.title('Surface plot of cost function')
 plt.show()
 
