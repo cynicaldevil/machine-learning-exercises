@@ -108,9 +108,10 @@ print predict2
 
 # ## 4. Visualizing J(θ)
 
-# In[28]:
+# In[66]:
 
 from mpl_toolkits.mplot3d import axes3d
+from matplotlib import cm
 
 x_points = np.arange(-10, 10, 0.4)
 y_points = np.arange(-1, 4, 0.1)
@@ -123,11 +124,27 @@ for x in x_points:
         temp = np.hstack((temp, compute_cost(X, Y, t)))
     J_values = np.append(J_values, np.array([temp]), axis=0)
 
-fig = plt.figure(figsize=(12,8))
-ax = fig.add_subplot(111, projection='3d')
+fig = plt.figure(figsize=2*plt.figaspect(0.4))
+
+# Figure 1
+ax = fig.add_subplot(1, 2, 1, projection='3d')
 x_values, y_values = np.meshgrid(x_points, x_points)
 ax.plot_wireframe(x_values, y_values, J_values, rstride=2, cstride=2)
 ax.view_init(elev=41., azim=130)
-plt.title('Surface plot of cost function')
+ax.set_xlabel('theta1')
+ax.set_ylabel('theta2')
+ax.set_zlabel('Cost function J')
+ax.set_title('Surface plot of cost function')
+
+# Figure 2
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+ax.plot_surface(x_values, y_values, J_values, rstride=8, cstride=8, alpha=0.3)
+ax.contour(x_values, y_values, J_values, 100, cmap="autumn_r", linestyles="solid", offset=-1)
+ax.set_xlabel('theta1')
+ax.set_ylabel('theta2')
+ax.set_zlabel('Cost function J')
+ax.set_title('Contour plot for cost function')
+ax.view_init(elev=51., azim=130)
+
 plt.show()
 
