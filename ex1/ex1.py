@@ -110,7 +110,7 @@ print predict2
 
 # ## 4. Visualizing J(θ)
 
-# In[66]:
+# In[7]:
 
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib import cm
@@ -149,4 +149,36 @@ ax.set_title('Contour plot for cost function')
 ax.view_init(elev=51., azim=130)
 
 plt.show()
+
+
+# ## 5. Linear Regression with multiple variables
+
+# ### 5.1 Feature Normalization
+
+# In[8]:
+
+data = np.loadtxt('data/ex1data2.txt', delimiter=',', usecols=(0, 1, 2), unpack=True, dtype=float)
+data = data.T
+X = data[:,0:2]
+Y = data[:,2]
+m = Y.shape[0]
+
+def feature_normalize(_X):
+    mu = np.empty((2))
+    sigma = np.empty((2))
+    for i in range(0, _X.shape[1]):
+        feature = _X[:, i]
+
+        avg = float(np.sum(feature))/float(m)
+        mu[i] = avg
+        std = np.std(feature)
+        sigma[i] = std
+
+        feature -= avg
+        feature /= std
+        _X[:, i] = feature
+
+    return _X, mu, sigma
+
+X, mu, sigma = feature_normalize(X)
 
