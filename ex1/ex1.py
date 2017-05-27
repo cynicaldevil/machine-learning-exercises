@@ -182,3 +182,27 @@ def feature_normalize(_X):
 
 X, mu, sigma = feature_normalize(X)
 
+
+# ## 5.2 Cost function with theta = 0
+
+# In[9]:
+
+X = np.concatenate((np.ones((47, 1)), X), axis=1)
+theta = np.zeros((3, 1))
+print "Cost with theta = [0, 0]:", compute_cost(X, Y, theta)
+
+
+# ## 5.3 Calculating Multi-variate Gradient Descent
+
+# In[10]:
+
+alpha = 0.01
+num_iters = 400
+theta, J_history = gradient_descent(X, Y, theta, alpha, iterations)
+plt.figure(figsize=(12,8))
+plt.plot(range(1, 1499), J_history[1:], 'bo')
+plt.xlabel("Number of iterations")
+plt.ylabel("Value of cost function")
+plt.show()
+print "Final cost:", J_history[-1]
+
