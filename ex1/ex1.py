@@ -34,14 +34,15 @@ m = m[0]
 X = np.hstack((np.ones((m, 1)), np.array([x]).T))
 
 # Cost computing function
-def compute_cost(X, Y, theta):
+def compute_cost(_X, _Y, _theta):
     J = 0
     # H = theta(0) + theta(1)*x(1) + theta(2)*x(2)...
-    H = np.dot(X, theta)
+    H = np.dot(_X, _theta)
 
+    len = _Y.shape[0]
     # Handy way to obtain the squares
-    J = np.dot((H - Y).T, (H - Y))
-    J = J / (2 * m)
+    J = np.dot((H - _Y).T, (H - _Y))
+    J = J / (2 * len)
     return J[0, 0]
 
 Y = np.array([y]).T
@@ -59,28 +60,29 @@ def gradient_descent(X, Y, inner_theta, alpha, iterations):
     # 1. Calculate cost using compute_cost function and print it.
     #    Also, check if cost is decreasing or not.
     # 2. Update values of theta.
-    
+
+    len = Y.shape[0]
     J_values = np.array([])
-    J_prev = 100000
+    J_prev = 1000000000000
     for i in range(1, iterations):
         J = compute_cost(X, Y, inner_theta)
         assert (J < J_prev), "Cost should be decreasing!!"
         H = np.dot(X, inner_theta)
         temp = np.dot((H - Y).T , X)
-        temp = temp * alpha / m
+        temp = temp * alpha / len
         inner_theta = inner_theta - temp.T
         J_values = np.hstack((J_values, J))
         J_prev = J
-    plt.figure(figsize=(12,8))
-    plt.plot(range(1, 1499), J_values[1:], 'bo')
-    plt.xlabel("Number of iterations")
-    plt.ylabel("Value of cost function")
-    plt.show()
-    return inner_theta
+    return inner_theta, J_values
 
 alpha = 0.01
 iterations = 1500
-theta = gradient_descent(X, Y, theta, alpha, iterations)
+theta, J_history = gradient_descent(X, Y, theta, alpha, iterations)
+plt.figure(figsize=(12,8))
+plt.plot(range(1, 1499), J_history[1:], 'bo')
+plt.xlabel("Number of iterations")
+plt.ylabel("Value of cost function")
+plt.show()
 print theta
 
 
