@@ -28,3 +28,11 @@ plt.xlabel('Exam 1 score')
 plt.ylabel('Exam 2 score')
 plt.show()
 
+
+# ## 2. Sigmoid Function
+
+# In[32]:
+
+def sigmoid(vec):
+    return 1/(1 + np.exp(-vec))
+
