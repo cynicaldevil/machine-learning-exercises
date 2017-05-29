@@ -38,7 +38,6 @@ def compute_cost(_X, _Y, _theta):
     J = 0
     # H = theta(0) + theta(1)*x(1) + theta(2)*x(2)...
     H = np.dot(_X, _theta)
-
     len = _Y.shape[0]
     # Handy way to obtain the squares
     J = np.dot((H - _Y).T, (H - _Y))
@@ -68,9 +67,11 @@ def gradient_descent(X, Y, inner_theta, alpha, iterations):
         J = compute_cost(X, Y, inner_theta)
         assert (J < J_prev), "Cost should be decreasing!!"
         H = np.dot(X, inner_theta)
+
         temp = np.dot((H - Y).T , X)
+        temp = np.array([np.sum(temp, axis=0)]).T
         temp = temp * alpha / len
-        inner_theta = inner_theta - temp.T
+        inner_theta = inner_theta - temp
         J_values = np.hstack((J_values, J))
         J_prev = J
     return inner_theta, J_values
@@ -160,16 +161,15 @@ plt.show()
 data = np.loadtxt('data/ex1data2.txt', delimiter=',', usecols=(0, 1, 2), unpack=True, dtype=float)
 data = data.T
 X = data[:,0:2]
-Y = data[:,2]
+Y = np.array([data[:,2]], dtype=float)
 m = Y.shape[0]
 
 def feature_normalize(_X):
-    mu = np.empty((2))
-    sigma = np.empty((2))
+    mu = np.empty((_X.shape[1]))
+    sigma = np.empty((_X.shape[1]))
     for i in range(0, _X.shape[1]):
         feature = _X[:, i]
-
-        avg = float(np.sum(feature))/float(m)
+        avg = float(np.sum(feature)/_X.shape[0])
         mu[i] = avg
         std = np.std(feature)
         sigma[i] = std
@@ -180,16 +180,18 @@ def feature_normalize(_X):
 
     return _X, mu, sigma
 
-X, mu, sigma = feature_normalize(X)
+# mu and sigma stand are vectors containing avg. and std. dev of each feature,
+# used later to normalize input
+normalized_X, mu, sigma = feature_normalize(np.copy(X))
 
 
 # ## 5.2 Cost function with theta = 0
 
 # In[9]:
 
-X = np.concatenate((np.ones((47, 1)), X), axis=1)
+normalized_X = np.concatenate((np.ones((47, 1)), normalized_X), axis=1)
 theta = np.zeros((3, 1))
-print "Cost with theta = [0, 0]:", compute_cost(X, Y, theta)
+print "Cost with theta = [0, 0]:", compute_cost(normalized_X, Y, theta)
 
 
 # ## 5.3 Calculating Multi-variate Gradient Descent
@@ -197,12 +199,12 @@ print "Cost with theta = [0, 0]:", compute_cost(X, Y, theta)
 # In[10]:
 
 alpha = 0.01
-num_iters = 400
-theta, J_history = gradient_descent(X, Y, theta, alpha, iterations)
+num_iters = 1500
+theta, J_history = gradient_descent(normalized_X, Y.T, theta, alpha, num_iters)
 plt.figure(figsize=(12,8))
 plt.plot(range(1, 1499), J_history[1:], 'bo')
 plt.xlabel("Number of iterations")
 plt.ylabel("Value of cost function")
 plt.show()
-print "Final cost:", J_history[-1]
+
 
