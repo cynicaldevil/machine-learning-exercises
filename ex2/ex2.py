@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 data = np.loadtxt('data/ex2data1.txt', delimiter=',', usecols=(0, 1, 2), unpack=True)
 data = data.T
 X = data[:,0:2]
+X = np.append(np.ones((X.shape[0], 1)), X, axis=1)
 Y = data[:,2]
 pos = data[Y == 1]
 neg = data[Y == 0]
@@ -39,15 +40,15 @@ def sigmoid(vec):
 
 # ## 3. Cost Function
 
-# In[8]:
+# In[4]:
 
 def h(theta, vec):
     return sigmoid(np.dot(vec, theta.T))
 
-def cost_function(X, Y, theta):
+def cost_function(theta, X, Y):
     return float((np.sum(-np.dot(Y, np.log(h(theta, X)))) - np.dot((1-Y), np.log(1-h(theta, X))))/
                  Y.shape[0])
 
-theta = np.zeros((1, 2))
-print "Cost function output with theta=[0, 0]:", cost_function(X, Y, theta)
+theta = np.zeros((1, 3))
+print "Cost function output with theta=[0, 0]:", cost_function(theta, X, Y)
 
