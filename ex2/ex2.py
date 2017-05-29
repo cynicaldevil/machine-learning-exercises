@@ -52,3 +52,22 @@ def cost_function(theta, X, Y):
 theta = np.zeros((1, 3))
 print "Cost function output with theta=[0, 0]:", cost_function(theta, X, Y)
 
+
+# ## 4. Gradient
+
+# In[5]:
+
+def gradient(theta, X, Y):
+    gradient = np.dot((h(theta, X) - Y), X)/Y.shape[0]
+    return gradient
+
+
+# ## 5. Optimization
+
+# In[7]:
+
+import scipy.optimize as opt
+
+result = opt.fmin_tnc(func=cost_function, x0=theta, fprime=gradient, args=(X, Y))
+print cost_function(np.array([result[0]]), X, Y)
+
