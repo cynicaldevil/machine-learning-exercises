@@ -208,3 +208,36 @@ plt.ylabel("Value of cost function")
 plt.show()
 
 
+# ## 6. Normal Equations
+
+# In[11]:
+
+def normal_equation(X, Y):
+    return np.dot(np.linalg.inv(np.dot(X.T, X)), np.dot(X.T, Y.T))
+
+X = np.concatenate((np.ones((47, 1)), X), axis=1)
+final_theta = normal_equation(X, Y)
+print "Theta obtained from Normal equations:\n", final_theta
+
+# Using the theta we obtained, predict the price of a 1650 sq.ft house with three bedrooms
+predict1 = np.dot(np.array([1, 1650, 3]), final_theta)[0]
+print "Price of House:", predict1
+
+
+# ### 6.1. Verifying correctness of normal equations
+
+# In[12]:
+
+# Use gradient descent to measure price of same house again, to
+# verify the correctness of normal equations
+
+# Need to normalize features first
+normalized_features =  (np.array([[1650, 3]], dtype=float) - mu) / sigma
+print "Normalized features:", normalized_features
+normalized_features = np.hstack(([[1]], normalized_features))
+
+predict2 = np.dot(normalized_features, theta[:, -1])[0]
+print "Predicted Price using grad. desc. :", predict2
+
+# Price is off by about $20 due to rounding errors
+
