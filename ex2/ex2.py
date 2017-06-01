@@ -83,3 +83,23 @@ def predict(theta, input):
 # predict probability with which a student with Exam1 score of 45, and Exam2 score of 85 will be admitted
 print predict(optimal_theta, np.array([1, 45, 85]))
 
+
+# ## 7. Plot the Decision Boundary
+
+# In[41]:
+
+plt.figure(figsize=(12,8))
+points_pos, = plt.plot(pos[:, 0], pos[:, 1], 'g+', markersize=10, label="Admitted")
+points_neg, = plt.plot(neg[:, 0], neg[:, 1], 'ro', markersize=7, label="Not admitted")
+minX = np.min(X[:, 1])
+maxX = np.max(X[:, 1])
+plot_x = np.array([[minX, maxX]])
+plot_y = np.multiply( -1/optimal_theta[0,2], optimal_theta[0,1]*plot_x + optimal_theta[0,0]).T
+plot_x = plot_x.T
+plt.plot(plot_x, plot_y, clip_path=None)
+plt.legend(handles=[points_pos, points_neg])
+plt.xlabel('Exam 1 score')
+plt.ylabel('Exam 2 score')
+plt.title('Decision Boundary')
+plt.show()
+
