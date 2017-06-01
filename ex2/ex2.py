@@ -64,10 +64,22 @@ def gradient(theta, X, Y):
 
 # ## 5. Optimization
 
-# In[7]:
+# In[16]:
 
 import scipy.optimize as opt
 
 result = opt.fmin_tnc(func=cost_function, x0=theta, fprime=gradient, args=(X, Y))
-print cost_function(np.array([result[0]]), X, Y)
+optimal_theta = np.array([result[0]])
+print "Cost using optimal theta:", cost_function(optimal_theta, X, Y)
+
+
+# ## 6. Prediction
+
+# In[15]:
+
+def predict(theta, input):
+    return h(theta, input)[0]
+
+# predict probability with which a student with Exam1 score of 45, and Exam2 score of 85 will be admitted
+print predict(optimal_theta, np.array([1, 45, 85]))
 
