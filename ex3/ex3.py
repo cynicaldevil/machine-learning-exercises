@@ -17,7 +17,7 @@ Y = data['y']
 
 # # 2. Display selection of images
 
-# In[204]:
+# In[208]:
 
 import numpy as np
 import random
@@ -32,7 +32,7 @@ for j in range(0, 10):
     img_arr = np.concatenate((img_arr, img_row), axis=0)
 
 plt.figure(figsize=(12,8))
-plt.imshow(img_arr[20:, 20: ], interpolation="nearest", cmap='gray')
+plt.imshow(img_arr[20:, 20: ].T, interpolation="nearest", cmap='gray')
 
 # Show random selection of 100 images using imshow
 plt.show()
