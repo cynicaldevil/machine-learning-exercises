@@ -37,3 +37,18 @@ plt.imshow(img_arr[20:, 20: ].T, interpolation="nearest", cmap='gray')
 # Show random selection of 100 images using imshow
 plt.show()
 
+
+# # 3. Vectorizing the Cost function
+
+# In[ ]:
+
+def sigmoid(vec):
+    return 1/(1 + np.exp(-vec))
+
+def h(theta, vec):
+    return sigmoid(np.dot(vec, theta.T))
+
+def cost_function(theta, X, Y):
+    return float((np.sum(-np.dot(Y, np.log(h(theta, X)))) - np.dot((1-Y), np.log(1-h(theta, X))))/
+                 Y.shape[0])
+
