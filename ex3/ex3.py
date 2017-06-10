@@ -3,7 +3,7 @@
 
 # # 1. Import images
 
-# In[41]:
+# In[1]:
 
 import scipy.io
 data = scipy.io.loadmat('data/ex3data1.mat')
@@ -17,7 +17,7 @@ Y = data['y']
 
 # # 2. Display selection of images
 
-# In[208]:
+# In[2]:
 
 import numpy as np
 import random
@@ -40,7 +40,7 @@ plt.show()
 
 # # 3. Vectorizing the Cost function
 
-# In[ ]:
+# In[3]:
 
 def sigmoid(vec):
     return 1/(1 + np.exp(-vec))
@@ -51,4 +51,15 @@ def h(theta, vec):
 def cost_function(theta, X, Y):
     return float((np.sum(-np.dot(Y, np.log(h(theta, X)))) - np.dot((1-Y), np.log(1-h(theta, X))))/
                  Y.shape[0])
+
+
+# # 4. Vectorized Gradient Descent
+
+# In[7]:
+
+theta = np.zeros((1, 400))
+def gradient(theta, X, Y):
+    Y = np.array([Y]).T
+    gradient = np.array(np.dot(X.T, (h(theta, X) - Y)).T/Y.shape[0])
+    return gradient
 
