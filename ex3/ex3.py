@@ -55,11 +55,37 @@ def cost_function(theta, X, Y):
 
 # # 4. Vectorized Gradient Descent
 
-# In[7]:
+# In[34]:
 
 theta = np.zeros((1, 400))
 def gradient(theta, X, Y):
     Y = np.array([Y]).T
     gradient = np.array(np.dot(X.T, (h(theta, X) - Y)).T/Y.shape[0])
-    return gradient
+    return gradient.reshape(1, 400)
+
+
+# # 5. Regularization
+
+# ## 5.1 Regularizing the Cost function
+
+# In[35]:
+
+def regularized_cost_function(theta, X, Y):
+    regular_cost = cost_function(theta, X, Y)
+    lambda_ = 100
+    cost = regular_cost + (lambda_/(2*Y.shape[0]))*np.sum(theta[:, 1:] * theta[:, 1:])
+    return cost
+
+
+# ## 5.2 Regularizing the Gradient
+
+# In[39]:
+
+def regularized_gradient(theta, X, Y):
+    regular_gradient = gradient(theta, X, Y)
+    lambda_ = 100
+    regularization_vec = np.copy(theta)
+    regularization_vec = regularization_vec * (lambda_/Y.shape[0])
+    regularization_vec[0, 0] = 0
+    return regularization_vec
 
