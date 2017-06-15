@@ -42,11 +42,10 @@ plt.show()
 
 # In[3]:
 
-def sigmoid(vec):
-    return 1/(1 + np.exp(-vec))
+from scipy.special import expit
 
 def h(theta, vec):
-    return sigmoid(np.dot(vec, theta.T))
+    return expit(np.dot(vec, theta.T))
 
 def cost_function(theta, X, Y):
     return float((np.sum(-np.dot(Y, np.log(h(theta, X)))) - np.dot((1-Y), np.log(1-h(theta, X))))/
