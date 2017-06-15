@@ -48,8 +48,9 @@ def h(theta, vec):
     return expit(np.dot(vec, theta.T))
 
 def cost_function(theta, X, Y):
-    return float((np.sum(-np.dot(Y, np.log(h(theta, X)))) - np.dot((1-Y), np.log(1-h(theta, X))))/
-                 Y.shape[0])
+    first_term = -(np.log(h(theta, X)) * Y.T)
+    second_term = -(np.log(1.0-h(theta, X)) * (1.0-Y.T))
+    return float(np.sum(first_term + second_term)/Y.shape[0])
 
 
 # # 4. Vectorized Gradient Descent
