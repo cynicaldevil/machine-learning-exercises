@@ -121,3 +121,25 @@ def get_theta():
     return big_theta
 
 theta = get_theta()
+
+
+# ## 6.2 Prediction
+
+# In[20]:
+
+def predict_one_vs_all(theta, X):
+    correct_hypotheses = 0
+    for i in range(0, X.shape[0]):
+        hypothesis = np.zeros(10)
+        for j in range(0, 10):
+            hypothesis[j] = h(theta[j], X[i])
+
+        max_hypothesis_val = np.argmax(hypothesis)
+        if (max_hypothesis_val >=1 and max_hypothesis_val == Y[i]):
+            correct_hypotheses = correct_hypotheses + 1
+        elif (max_hypothesis_val == 0 and  Y[i] == 10):
+            correct_hypotheses = correct_hypotheses + 1
+
+    print 'Accuracy of One vs. All classifier trained via logisitic regression:     %0.2f%% \n(Actual value depends on iterations on optimization function) \n    ' % (float(correct_hypotheses) * 100.0 / 5000.0)
+
+predict_one_vs_all(theta, X)
