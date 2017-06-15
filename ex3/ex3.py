@@ -55,13 +55,15 @@ def cost_function(theta, X, Y):
 
 # # 4. Vectorized Gradient Descent
 
-# In[34]:
+# In[4]:
 
-theta = np.zeros((1, 400))
+X = np.append(np.ones((X.shape[0], 1)), X, axis=1)
+
 def gradient(theta, X, Y):
-    Y = np.array([Y]).T
-    gradient = np.array(np.dot(X.T, (h(theta, X) - Y)).T/Y.shape[0])
-    return gradient.reshape(1, 400)
+    first_term = h(theta, X) - Y.reshape(5000)
+    second_term = X.T
+    gradient = np.array(np.dot(second_term, first_term))/Y.shape[0]
+    return gradient
 
 
 # # 5. Regularization
