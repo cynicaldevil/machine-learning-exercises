@@ -70,24 +70,23 @@ def gradient(theta, X, Y):
 
 # ## 5.1 Regularizing the Cost function
 
-# In[35]:
+# In[5]:
 
 def regularized_cost_function(theta, X, Y):
     regular_cost = cost_function(theta, X, Y)
-    lambda_ = 100
-    cost = regular_cost + (lambda_/(2*Y.shape[0]))*np.sum(theta[:, 1:] * theta[:, 1:])
+    lambda_ = 0.
+    cost = regular_cost + (lambda_/(2.0*Y.shape[0]))*np.sum(theta[1:] * theta[1:])
     return cost
 
 
 # ## 5.2 Regularizing the Gradient
 
-# In[39]:
+# In[6]:
 
 def regularized_gradient(theta, X, Y):
     regular_gradient = gradient(theta, X, Y)
-    lambda_ = 100
-    regularization_vec = np.copy(theta)
-    regularization_vec = regularization_vec * (lambda_/Y.shape[0])
-    regularization_vec[0, 0] = 0
-    return regularization_vec
+    lambda_ = 0.
+    regularization_vec = np.copy(regular_gradient)
+    regularization_vec[1:] = regularization_vec[1:] + ((lambda_/Y.shape[0])*theta[1:])
+    return regularization_vec.reshape(401)
 
