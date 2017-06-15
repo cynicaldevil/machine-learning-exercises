@@ -90,3 +90,34 @@ def regularized_gradient(theta, X, Y):
     regularization_vec[1:] = regularization_vec[1:] + ((lambda_/Y.shape[0])*theta[1:])
     return regularization_vec.reshape(401)
 
+
+# # 6. One-vs-All Classification using Logistic Regression
+
+# ## 6.1 Obtain  Θ (big theta)
+
+# In[21]:
+
+import scipy.optimize as opt
+
+def get_theta():
+    big_theta = np.zeros((10, 401))
+    for i in range(0, 10):
+        classifier_y = np.zeros(5000)
+        print "Optimizing theta for", i, "..."
+        for j in range(0, 5000):
+            if (i >= 1 and Y[j] == i):
+                classifier_y[j] = 1
+            elif (i == 0 and Y[j] == 10):
+                classifier_y[j] = 1
+
+        classifier_y = np.array([classifier_y]).T
+        big_theta[i] = opt.fmin_cg(regularized_cost_function,
+                                   x0=np.array([big_theta[i]]),
+                                   fprime=regularized_gradient,
+                                   maxiter=100,
+                                   disp=False,
+                                   args=(X, classifier_y))
+    print "Done!"
+    return big_theta
+
+theta = get_theta()
