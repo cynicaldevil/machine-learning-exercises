@@ -3,7 +3,7 @@
 
 # # 1. Import images
 
-# In[8]:
+# In[1]:
 
 import scipy.io
 data = scipy.io.loadmat('data/ex3data1.mat')
@@ -17,10 +17,9 @@ Y = data['y'].reshape(5000)
 
 # # 2. Display selection of images
 
-# In[23]:
+# In[2]:
 
 import numpy as np
-import random
 from matplotlib import pyplot as plt
 
 # Generating new random numbers each time I executed the kernel meant that
@@ -52,4 +51,47 @@ plt.imshow(img_arr[20:, 20: ].T, interpolation="nearest", cmap='gray')
 
 # Show random selection of 100 images using imshow
 plt.show()
+
+
+# # 3. Cost function
+
+# ## 3.1 Actual Definition
+
+# In[3]:
+
+from scipy.special import expit
+import math
+
+def h(theta, vec):
+    return expit(np.dot(vec, theta))
+
+def cost_function(theta1, theta2, X, Y, K):
+    m = Y.shape[0]
+    cost = 0
+    # For every training example:
+    for i in range(0, m):
+
+        # Hidden layer
+        z2 = np.dot(theta1, X[i].T)
+        a2 = expit(z2)
+        # Add bias nodes
+        a2 = np.concatenate((np.ones(1), a2), axis=0)
+
+        # Final layer
+        z3 = np.dot(theta2, a2.T)
+        a3 = expit(z3)
+        hypothesis = a3
+
+        # construct y
+        y = np.zeros(10)
+        # Suppose Y[i] = 5, y needs to be a 10-dimensional matrix with y[4] = 1 (becoz indexing starts with zero)
+        y[Y[i] - 1] = 1
+
+        #  For every class:
+        for k in range(0, K):
+            first_term = -y[k] * math.log(hypothesis[k])
+            second_term = -(1 - y[k]) * math.log(1 - hypothesis[k])
+            cost = cost + (first_term + second_term)
+
+    return cost/m
 
