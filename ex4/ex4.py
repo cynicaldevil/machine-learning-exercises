@@ -39,10 +39,12 @@ rand_nums = np.array([457, 4925, 31, 3479, 4392, 4110, 107, 4292, 1345, 4614,
 
 img_arr = np.empty([20, 220])
 for j in range(0, 10):
+    # Array to hold a row of 10 images
     img_row = np.empty([20, 20])
     for i in range(0, 10):
         img = X[rand_nums[(10*j) + i]].reshape(20, 20)
         img_row = np.concatenate((img_row, img), axis=1)
+    # Add row to the image matrix
     img_arr = np.concatenate((img_arr, img_row), axis=0)
 
 plt.figure(figsize=(12,8))
