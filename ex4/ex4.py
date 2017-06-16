@@ -130,3 +130,30 @@ def regularized_cost_function(theta1, theta2, X, Y, K, lambda_):
 
 print "Regularized Cost:", regularized_cost_function(theta1, theta2, X, Y, 10, 1)
 
+
+# # 4. Sigmoid Gradient Function
+
+# In[6]:
+
+def sigmoid_gradient(z):
+    g = expit(z)
+    return g * (1-g)
+
+
+# # 5. Initialize weights at random
+
+# In[7]:
+
+import random
+
+# returns a matrix of size L_out, (L_in + 1)
+def rand_init_weights(L_in, L_out):
+    epsilon_init = 0.12
+    W = np.zeros((L_out, (L_in + 1)))
+
+    for i in range(0, L_out):
+        for j in range(0, L_in + 1):
+            W[i, j] = random.uniform(-epsilon_init, epsilon_init)
+
+    return W
+
