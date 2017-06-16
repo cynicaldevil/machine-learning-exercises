@@ -108,3 +108,25 @@ X = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
 
 print "Testing cost function with given weights:",cost_function(theta1, theta2, X, Y, 10)
 
+
+# ## 3.3 Regularized cost function
+
+# In[5]:
+
+def regularized_cost_function(theta1, theta2, X, Y, K, lambda_):
+    m = Y.shape[0]
+    cost = cost_function(theta1, theta2, X, Y, K)
+    regularization_term = 0
+    for j in range(0, theta1.shape[0]):
+        for k in range(1, theta1.shape[1]):
+            regularization_term = regularization_term + (theta1[j, k]*theta1[j, k])
+
+    for j in range(0, theta2.shape[0]):
+        for k in range(1, theta2.shape[1]):
+            regularization_term = regularization_term + (theta2[j, k]*theta2[j, k])
+
+    regularization_term = (regularization_term*lambda_) / (2*m)
+    return cost + regularization_term
+
+print "Regularized Cost:", regularized_cost_function(theta1, theta2, X, Y, 10, 1)
+
