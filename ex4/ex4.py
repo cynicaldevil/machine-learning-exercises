@@ -95,3 +95,16 @@ def cost_function(theta1, theta2, X, Y, K):
 
     return cost/m
 
+
+# ## 3.2 Testing the cost function against given theta
+
+# In[4]:
+
+data_nn = scipy.io.loadmat('data/ex3weights.mat')
+theta1 = data_nn['Theta1']
+theta2 = data_nn['Theta2']
+
+X = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
+
+print "Testing cost function with given weights:",cost_function(theta1, theta2, X, Y, 10)
+
