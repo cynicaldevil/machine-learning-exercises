@@ -14,6 +14,11 @@ X = data['X']
 # A 5000-dimensional matrix, each element representing the number shown in the corresponding image
 Y = data['y'].reshape(5000)
 
+# Setup the parameters
+input_layer_size  = 400  # 20x20 input images of digits
+hidden_layer_size = 25   # 25 hidden units
+num_labels = 10
+
 
 # # 2. Display selection of images
 
@@ -65,7 +70,13 @@ import math
 def h(theta, vec):
     return expit(np.dot(vec, theta))
 
-def cost_function(theta1, theta2, X, Y, K):
+def cost_function(params, X, Y):
+    # Reshape params
+    theta1 = params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
+        (hidden_layer_size, input_layer_size + 1))
+    theta2 = params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
+        (num_labels, (hidden_layer_size + 1)))
+
     m = Y.shape[0]
     cost = 0
     # For every training example:
@@ -87,8 +98,8 @@ def cost_function(theta1, theta2, X, Y, K):
         # Suppose Y[i] = 5, y needs to be a 10-dimensional matrix with y[4] = 1 (becoz indexing starts with zero)
         y[Y[i] - 1] = 1
 
-        #  For every class:
-        for k in range(0, K):
+        # For every class:
+        for k in range(0, num_labels):
             first_term = -y[k] * math.log(hypothesis[k])
             second_term = -(1 - y[k]) * math.log(1 - hypothesis[k])
             cost = cost + (first_term + second_term)
@@ -106,16 +117,20 @@ theta2 = data_nn['Theta2']
 
 X = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
 
-print "Testing cost function with given weights:",cost_function(theta1, theta2, X, Y, 10)
+# Unroll theta1, theta2
+params = np.concatenate((theta1.reshape(hidden_layer_size * (input_layer_size+1)),
+                  theta2.reshape(num_labels * (hidden_layer_size + 1))))
+
+print "Testing cost function with given weights:",cost_function(params, X, Y)
 
 
 # ## 3.3 Regularized cost function
 
 # In[5]:
 
-def regularized_cost_function(theta1, theta2, X, Y, K, lambda_):
+def regularized_cost_function(params, X, Y, lambda_):
     m = Y.shape[0]
-    cost = cost_function(theta1, theta2, X, Y, K)
+    cost = cost_function(params, X, Y)
     regularization_term = 0
     for j in range(0, theta1.shape[0]):
         for k in range(1, theta1.shape[1]):
@@ -128,7 +143,7 @@ def regularized_cost_function(theta1, theta2, X, Y, K, lambda_):
     regularization_term = (regularization_term*lambda_) / (2*m)
     return cost + regularization_term
 
-print "Regularized Cost:", regularized_cost_function(theta1, theta2, X, Y, 10, 1)
+print "Regularized Cost:", regularized_cost_function(params, X, Y, 1)
 
 
 # # 4. Sigmoid Gradient Function
