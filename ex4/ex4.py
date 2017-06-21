@@ -210,3 +210,35 @@ def backpropogation(theta1, theta2, X, Y):
     D2 = tr_delta2 / m
     return np.concatenate((D1.reshape(D1.size), D2.reshape(D2.size)))
 
+
+
+# # 7. Initialize Parameters
+
+# In[9]:
+
+initial_theta1 = rand_init_weights(input_layer_size, hidden_layer_size)
+initial_theta2 = rand_init_weights(hidden_layer_size, num_labels)
+
+# Unroll parameters
+intitial_nn_params = np.concatenate((initial_theta1.reshape(initial_theta1.size),
+                               initial_theta2.reshape(initial_theta2.size)))
+
+
+# # 8. Computing the numerical gradient
+
+# In[10]:
+
+def compute_numerical_gradient(J, theta, X, Y, input_layer_size, hidden_layer_size, num_labels):
+    numgrad = np.zeros(theta.shape)
+    perturb = np.zeros(theta.shape)
+    e = 1e-4
+    for p in range(0, theta.shape[0]):
+        perturb[p] = e
+        loss1 = J(theta - perturb, X, Y, input_layer_size, hidden_layer_size, num_labels)
+        loss2 = J(theta + perturb, X, Y, input_layer_size, hidden_layer_size, num_labels)
+        # Compute Numerical Gradient
+        numgrad[p] = (loss2 - loss1) / (2*e)
+        perturb[p] = 0
+
+    return numgrad
+
