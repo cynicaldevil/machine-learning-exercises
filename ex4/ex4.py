@@ -70,7 +70,7 @@ import math
 def h(theta, vec):
     return expit(np.dot(vec, theta))
 
-def cost_function(params, X, Y):
+def cost_function(params, X, Y, input_layer_size, hidden_layer_size, num_labels):
     # Reshape params
     theta1 = params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
         (hidden_layer_size, input_layer_size + 1))
@@ -121,16 +121,16 @@ X = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
 params = np.concatenate((theta1.reshape(hidden_layer_size * (input_layer_size+1)),
                   theta2.reshape(num_labels * (hidden_layer_size + 1))))
 
-print "Testing cost function with given weights:",cost_function(params, X, Y)
+print "Testing cost function with given weights:",cost_function(params, X, Y, input_layer_size, hidden_layer_size, num_labels)
 
 
 # ## 3.3 Regularized cost function
 
 # In[5]:
 
-def regularized_cost_function(params, X, Y, lambda_):
+def regularized_cost_function(params, X, Y, lambda_, input_layer_size, hidden_layer_size, num_labels):
     m = Y.shape[0]
-    cost = cost_function(params, X, Y)
+    cost = cost_function(params, X, Y, input_layer_size, hidden_layer_size, num_labels)
     regularization_term = 0
     for j in range(0, theta1.shape[0]):
         for k in range(1, theta1.shape[1]):
@@ -143,7 +143,7 @@ def regularized_cost_function(params, X, Y, lambda_):
     regularization_term = (regularization_term*lambda_) / (2*m)
     return cost + regularization_term
 
-print "Regularized Cost:", regularized_cost_function(params, X, Y, 1)
+print "Regularized Cost:", regularized_cost_function(params, X, Y, 1, input_layer_size, hidden_layer_size, num_labels)
 
 
 # # 4. Sigmoid Gradient Function
