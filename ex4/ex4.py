@@ -242,3 +242,48 @@ def compute_numerical_gradient(J, theta, X, Y, input_layer_size, hidden_layer_si
 
     return numgrad
 
+
+# # 9. Check gradients
+
+# In[11]:
+
+from numpy import linalg as LA
+
+def debug_init_weights(fan_out, fan_in):
+    w = np.zeros((fan_out, 1 + fan_in))
+    w = np.sin(np.arange(1, w.size+1)).reshape(w.shape) / 10
+    return w
+
+# Creates a small neural network to check the backpropogation gradients
+def check_gradients(lambda_):
+    input_layer_size = 3
+    hidden_layer_size = 5
+    num_labels = 3
+    m = 5
+
+    # Generate some 'random' test data
+    theta1 = debug_init_weights(hidden_layer_size, input_layer_size)
+    theta2 = debug_init_weights(num_labels, hidden_layer_size)
+    # Reusing debug_init_weights to generate X
+    X  = debug_init_weights(m, input_layer_size - 1)
+    X = np.concatenate((np.ones(X.shape[0]).reshape(5, 1), X), axis=1)
+    Y  = 1 + (np.arange(1,m+1) % num_labels).conj().T
+
+    #Unroll parameters
+    nn_params = np.concatenate((theta1.reshape(theta1.size), theta2.reshape(theta2.size)))
+
+    numgrad = compute_numerical_gradient(cost_function, nn_params, X, Y, input_layer_size, hidden_layer_size, num_labels)
+
+    # Reshape params
+    theta1 = nn_params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
+        (hidden_layer_size, input_layer_size + 1))
+    theta2 = nn_params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
+        (num_labels, (hidden_layer_size + 1)))
+    grad = backpropogation(theta1, theta2, X, Y)
+
+    # Calculate norm diff
+    diff = LA.norm(numgrad - grad)/LA.norm(numgrad + grad)
+    print "Relative difference between grad. calculated numerically and using backprop impl:", diff
+
+check_gradients(0)
+
