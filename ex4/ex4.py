@@ -172,3 +172,41 @@ def rand_init_weights(L_in, L_out):
 
     return W
 
+
+# # 6. Backpropogation algorithm
+
+# In[8]:
+
+def backpropogation(theta1, theta2, X, Y):
+    m = Y.shape[0]
+    tr_delta2 = np.zeros(theta2.shape)
+    tr_delta1 = np.zeros(theta1.shape)
+    for t in range(0, m):
+        # First layer
+        a1 = X[t].T
+
+        # Hidden layer
+        z2 = np.dot(theta1, a1)
+        a2 = expit(z2)
+        # Add bias nodes
+        a2 = np.concatenate((np.ones(1), a2), axis=0)
+
+        # Final layer
+        z3 = np.dot(theta2, a2.T)
+        a3 = expit(z3)
+
+        # construct y
+        y = np.zeros(theta2.shape[0])
+        y[Y[t] - 1] = 1
+
+        delta3 = a3 - y
+        delta2 = np.multiply(np.dot(theta2.T, delta3), sigmoid_gradient(a2))
+        # Need to skip delta2[0]
+        delta2 = delta2[1:]
+
+        tr_delta2 += np.array([delta3]).T.dot(np.array([a2]))
+        tr_delta1 += np.array([delta2]).T.dot(np.array([a1]))
+    D1 = tr_delta1 / m
+    D2 = tr_delta2 / m
+    return np.concatenate((D1.reshape(D1.size), D2.reshape(D2.size)))
+
