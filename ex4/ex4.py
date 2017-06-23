@@ -177,7 +177,13 @@ def rand_init_weights(L_in, L_out):
 
 # In[8]:
 
-def backpropogation(theta1, theta2, X, Y, lambda_):
+def backpropogation(params, X, Y, lambda_, input_layer_size, hidden_layer_size, num_labels):
+    # Reshape params
+    theta1 = params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
+        (hidden_layer_size, input_layer_size + 1))
+    theta2 = params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
+        (num_labels, (hidden_layer_size + 1)))
+
     m = Y.shape[0]
     tr_delta2 = np.zeros(theta2.shape)
     tr_delta1 = np.zeros(theta1.shape)
@@ -276,16 +282,75 @@ def check_gradients(lambda_):
 
     numgrad = compute_numerical_gradient(cost_function, nn_params, X, Y, input_layer_size, hidden_layer_size, num_labels)
 
-    # Reshape params
-    theta1 = nn_params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
-        (hidden_layer_size, input_layer_size + 1))
-    theta2 = nn_params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
-        (num_labels, (hidden_layer_size + 1)))
-    grad = backpropogation(theta1, theta2, X, Y, lambda_)
+    grad = backpropogation(nn_params, X, Y, lambda_, input_layer_size, hidden_layer_size, num_labels)
 
     # Calculate norm diff
     diff = LA.norm(numgrad - grad)/LA.norm(numgrad + grad)
     print "Relative difference between grad. calculated numerically and using backprop impl:", diff
 
 check_gradients(0)
+
+
+# # 10. Obtain Θ (big theta)
+
+# In[12]:
+
+import scipy.optimize as opt
+
+def get_theta():
+    big_theta = opt.fmin_cg(regularized_cost_function,
+                                   x0= intitial_nn_params,
+                                   fprime=backpropogation,
+                                   maxiter=75,
+                                   disp=False,
+                                   args=(X, Y, 1, input_layer_size, hidden_layer_size, num_labels))
+    return big_theta
+    
+big_theta = get_theta()
+print big_theta
+
+
+# In[13]:
+
+# Obtain Theta1 and Theta2
+big_theta.shape
+theta1 = big_theta[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
+    (hidden_layer_size, input_layer_size + 1))
+theta2 = big_theta[(hidden_layer_size * (input_layer_size + 1)):].reshape(
+    (num_labels, (hidden_layer_size + 1)))
+
+
+# # 11. Prediction
+
+# In[14]:
+
+def prediction(hypothesis, i, Y):
+    prediction = np.argmax(hypothesis) + 1
+    if (prediction == Y[i]):
+        return True
+    else:
+        return False
+
+def feed_forward_propogation(X, Y):
+    correct_hypotheses = 0
+    for i in range(0, X.shape[0]):
+        # First layer
+        z2 = np.dot(theta1, X[i].T)
+        a2 = expit(z2)
+        # Add bias nodes
+        a2 = np.concatenate((np.ones(1), a2), axis=0)
+
+        # Second layer
+        z3 = np.dot(theta2, a2.T)
+        a3 = expit(z3)
+
+        # Final layer (hypothesis)
+        hypothesis = a3
+        result = prediction(hypothesis, i, Y)
+        if (result):
+            correct_hypotheses = correct_hypotheses + 1
+
+    print 'Accuracy of Neural Network: %0.2f%%' % (float(correct_hypotheses) * 100.0 / 5000.0)
+
+feed_forward_propogation(X, Y)
 
