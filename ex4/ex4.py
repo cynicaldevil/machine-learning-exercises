@@ -129,6 +129,12 @@ print "Testing cost function with given weights:",cost_function(params, X, Y, in
 # In[5]:
 
 def regularized_cost_function(params, X, Y, lambda_, input_layer_size, hidden_layer_size, num_labels):
+    # Reshape params
+    theta1 = params[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
+        (hidden_layer_size, input_layer_size + 1))
+    theta2 = params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
+        (num_labels, (hidden_layer_size + 1)))
+
     m = Y.shape[0]
     cost = cost_function(params, X, Y, input_layer_size, hidden_layer_size, num_labels)
     regularization_term = 0
@@ -151,8 +157,7 @@ print "Regularized Cost:", regularized_cost_function(params, X, Y, 1, input_laye
 # In[6]:
 
 def sigmoid_gradient(z):
-    g = expit(z)
-    return g * (1-g)
+    return z * (1-z)
 
 
 # # 5. Initialize weights at random
@@ -272,6 +277,7 @@ def check_gradients(lambda_):
     # Generate some 'random' test data
     theta1 = debug_init_weights(hidden_layer_size, input_layer_size)
     theta2 = debug_init_weights(num_labels, hidden_layer_size)
+
     # Reusing debug_init_weights to generate X
     X  = debug_init_weights(m, input_layer_size - 1)
     X = np.concatenate((np.ones(X.shape[0]).reshape(5, 1), X), axis=1)
@@ -287,8 +293,9 @@ def check_gradients(lambda_):
     # Calculate norm diff
     diff = LA.norm(numgrad - grad)/LA.norm(numgrad + grad)
     print "Relative difference between grad. calculated numerically and using backprop impl:", diff
+    print "Note: the relative difference should be small (less than 1e-9)"
 
-check_gradients(0)
+check_gradients(3)
 
 
 # # 10. Obtain Θ (big theta)
@@ -301,13 +308,12 @@ def get_theta():
     big_theta = opt.fmin_cg(regularized_cost_function,
                                    x0= intitial_nn_params,
                                    fprime=backpropogation,
-                                   maxiter=75,
+                                   maxiter=50,
                                    disp=False,
                                    args=(X, Y, 1, input_layer_size, hidden_layer_size, num_labels))
     return big_theta
-    
+
 big_theta = get_theta()
-print big_theta
 
 
 # In[13]:
@@ -316,6 +322,7 @@ print big_theta
 big_theta.shape
 theta1 = big_theta[0:(hidden_layer_size * (input_layer_size + 1))].reshape(
     (hidden_layer_size, input_layer_size + 1))
+
 theta2 = big_theta[(hidden_layer_size * (input_layer_size + 1)):].reshape(
     (num_labels, (hidden_layer_size + 1)))
 
