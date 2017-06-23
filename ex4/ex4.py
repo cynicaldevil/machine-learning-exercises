@@ -361,3 +361,28 @@ def feed_forward_propogation(X, Y):
 
 feed_forward_propogation(X, Y)
 
+
+# # 12. Visualizing the hidden layer
+
+# In[15]:
+
+# Need to remove bias nodes first
+visualize_theta = theta1[:, 1:]
+
+img_arr = np.empty([20, 120])
+for j in range(0, 5):
+    # Array to hold a row of 5 images
+    img_row = np.empty([20, 20])
+
+    for i in range(0, 5):
+        img = visualize_theta[i*5 + j].reshape(20, 20)
+        img_row = np.concatenate((img_row, img), axis=1)
+    # Add row of 5 images to the image matrix (5x5)
+    img_arr = np.concatenate((img_arr, img_row), axis=0)
+
+plt.figure(figsize=(10,6))
+plt.imshow(img_arr[20:, 20: ].T, interpolation="nearest", cmap='gray')
+
+# Show Hidden layer visualization
+plt.show()
+
