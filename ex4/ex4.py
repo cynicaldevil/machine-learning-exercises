@@ -177,7 +177,7 @@ def rand_init_weights(L_in, L_out):
 
 # In[8]:
 
-def backpropogation(theta1, theta2, X, Y):
+def backpropogation(theta1, theta2, X, Y, lambda_):
     m = Y.shape[0]
     tr_delta2 = np.zeros(theta2.shape)
     tr_delta1 = np.zeros(theta1.shape)
@@ -208,8 +208,10 @@ def backpropogation(theta1, theta2, X, Y):
         tr_delta1 += np.array([delta2]).T.dot(np.array([a1]))
     D1 = tr_delta1 / m
     D2 = tr_delta2 / m
-    return np.concatenate((D1.reshape(D1.size), D2.reshape(D2.size)))
 
+    D1[:, 1:] += (lambda_/m) * theta1[:, 1:]
+    D2[:, 1:] += (lambda_/m) * theta2[:, 1:]
+    return np.concatenate((D1.reshape(D1.size), D2.reshape(D2.size)))
 
 
 # # 7. Initialize Parameters
@@ -279,7 +281,7 @@ def check_gradients(lambda_):
         (hidden_layer_size, input_layer_size + 1))
     theta2 = nn_params[(hidden_layer_size * (input_layer_size + 1)):].reshape(
         (num_labels, (hidden_layer_size + 1)))
-    grad = backpropogation(theta1, theta2, X, Y)
+    grad = backpropogation(theta1, theta2, X, Y, lambda_)
 
     # Calculate norm diff
     diff = LA.norm(numgrad - grad)/LA.norm(numgrad + grad)
