@@ -87,3 +87,31 @@ plt.ylabel('Water flowing out of the dam (y)')
 plt.title('Training data with linear regression fit')
 plt.show()
 
+
+# # 5. Bias-Variance
+
+# ## 5.1 Learning curves
+
+# In[6]:
+
+def learning_curves(X, Y, Xval, Yval, lambda_):
+    error_train = np.empty(m)
+    error_val = np.empty(m)
+    for i in range(0, m):
+        # Theta obtained by training first i examples from the dataset
+        theta = train_linear_reg(X[:i+1, :], Y[:i+1], lambda_)
+
+        error_train[i] = linear_reg_cost_function(theta, X[:i+1, :], Y[:i+1], lambda_)
+        error_val[i] = linear_reg_cost_function(theta, X, Y, lambda_)
+    return (error_train, error_val)
+
+(error_train, error_val) = learning_curves(X, Y, Xval, Yval, 0)
+
+plt.figure(figsize=(12,10))
+points_train, = plt.plot(np.arange(0, m), error_train, 'b-', label="Training Error")
+points_val, = plt.plot(np.arange(0, m), error_val, 'g-', label="Cross validation Error")
+plt.legend(handles=[points_train, points_val])
+plt.xlabel('Number of training examples')
+plt.ylabel('Error')
+plt.show()
+
