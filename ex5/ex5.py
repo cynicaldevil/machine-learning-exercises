@@ -47,3 +47,15 @@ def linear_reg_cost_function(theta, X, Y, lambda_):
 theta = np.ones(2)
 print "Regularized cost at theta = [1 , 1]: ", linear_reg_cost_function(theta, X, Y, 1)
 
+
+# # 3. Regularized linear regression gradient
+
+# In[4]:
+
+def linear_reg_gradient(theta, X, Y, lambda_):
+    grad = np.dot((h(theta, X) - Y).T, X) / m
+    grad[1:] += (lambda_ / float(m)) * theta[1:]
+    return grad
+
+print "Gradient at theta = [1 , 1]: ", linear_reg_gradient(theta, X, Y, 1)
+
