@@ -59,3 +59,31 @@ def linear_reg_gradient(theta, X, Y, lambda_):
 
 print "Gradient at theta = [1 , 1]: ", linear_reg_gradient(theta, X, Y, 1)
 
+
+# # 4. Train linear regression
+
+# In[5]:
+
+import scipy.optimize as opt
+
+def train_linear_reg(X, Y, lambda_):
+    initial_theta = np.zeros((X.shape[1], 1))
+    theta = opt.fmin_cg(linear_reg_cost_function,
+       x0=initial_theta,
+       fprime=linear_reg_gradient,
+       maxiter=100,
+       disp=False,
+       args=(X, Y, lambda_))
+    return theta
+
+theta = train_linear_reg(X, Y, 0)
+
+# Plot the fit over data (Linear fit is not the best fit for the data, as shown by the visualization)
+plt.figure(figsize=(12,8))
+plt.plot(X[:, 1:],Y, 'rx', markersize=10, label="Training data")
+plt.plot(X[:,1], np.dot(X, theta), '-', label="Linear Regression")
+plt.xlabel('Change in water level (x)')
+plt.ylabel('Water flowing out of the dam (y)')
+plt.title('Training data with linear regression fit')
+plt.show()
+
